@@ -9,8 +9,8 @@ def abss(x):
 def degree_and_solution(terms):
     degree = 0
     for power in terms:
-        coefficient = terms[power]
-        if coefficient != 0 and power > degree:
+        mo3amile = terms[power]
+        if mo3amile != 0 and power > degree:
             degree = power
     print(f"Polynomial degree: {degree}")
 
@@ -24,16 +24,15 @@ def degree_and_solution(terms):
     elif degree == 1:
         b = terms.get(1,0)
         c = terms.get(0,0)
-
         res = -c /b
         print(f"The solution is:\n{res}")
     elif degree == 2:
         a = terms.get(2,0)
         b = terms.get(1,0)
         c = terms.get(0,0)
-        delta = b*b - 4*a*c
+        delta = (b*b) - (4*a*c)
         if delta > 0:
-            res1 = (-b + delta**0.5 ) / (2*a)
+            res1 = (-b + delta**0.5) / (2*a)
             res2 = (-b - delta**0.5) / (2*a)
             print(f"The discriminant is strictly positive, the two solutions are:\n{res1}\n{res2}")
         elif delta == 0:
@@ -41,7 +40,7 @@ def degree_and_solution(terms):
             print(f"The discriminant is zero, the solution is:\n{res}")
         elif delta < 0:
             res1 = (-b + (abss(delta)**0.5) * 1j) / (2*a)
-            res2 = (-b + (abss(delta)**0.5) * 1j) / (2*a)
+            res2 = (-b - (abss(delta)**0.5) * 1j) / (2*a)
             print(f"The discriminant is strictly negative, the two complex solutions are:\n{res1}\n{res2}")
     elif degree > 2:
         print("The polynomial degree is strictly greater than 2, I can't solve.")
@@ -54,9 +53,9 @@ def main():
     equation = sys.argv[1]
 
     terms = {
-        0: 1,
+        2: 5,
         1: 5,
-        2: 2
+        0: 1,
     }
 
     degree_and_solution(terms)
