@@ -5,6 +5,85 @@ def abss(x):
         return -x
     else:
         return x
+    
+
+def parsing(side):
+    terms = {}
+    side = side.replace(" ", "")
+
+    if side == "0":
+        return terms
+
+    current = ""
+    sign = 1
+
+    for char in side:
+        if char == "+" or char == "-":
+            if current:
+                coefficient, power = current.split("*X^")
+                coefficient = float(coefficient)
+                power = int(power)
+
+                terms[power] = terms.get(power, 0) + sign * coefficient
+
+            current = ""
+            sign = 1 if char == "+" else -1
+
+        else:
+            current += char
+
+    if current:
+        coefficient, power = current.split("*X^")
+        coefficient = float(coefficient)
+        power = int(power)
+
+        terms[power] = terms.get(power, 0) + sign * coefficient
+
+    return terms
+
+
+def print_reduced_form(terms):
+    print("Reduced form: ", end="")
+    if not terms or all(value == 0 for value in terms.values()):
+        print("0 * X^0 = 0")
+        return
+
+    powers = sorted(terms.keys())
+    first = True
+
+    for power in powers:
+        coefficient = terms[power]
+
+        if first:
+            print(f"{coefficient:g} * X^{power}", end="")
+            first = False
+        elif coefficient >= 0:
+            print(f" + {coefficient:g} * X^{power}", end="")
+        else:
+            print(f" - {abss(coefficient):g} * X^{power}", end="")
+
+    print(" = 0")
+    
+    
+def parse_equation(equation):
+    sides = equation.split("=")
+
+    if len(sides) != 2:
+        raise ValueError("Invalid equation")
+
+    left = parsing(sides[0])
+    right = parsing(sides[1])
+
+    terms = {}
+
+    for power in left:
+        terms[power] = left[power]
+
+    for power in right:
+        terms[power] = terms.get(power, 0) - right[power]
+
+    return terms
+
 
 def degree_and_solution(terms):
     degree = 0
@@ -15,11 +94,11 @@ def degree_and_solution(terms):
     print(f"Polynomial degree: {degree}")
 
     if degree == -1:
-        print("Any real number is a solution.")
+        print("No solution")
         return
     if degree == 0:
         if terms.get(0,0) == 0:
-            print("No solution")
+            print("Any real number is a solution.")
             return
     elif degree == 1:
         b = terms.get(1,0)
@@ -51,14 +130,12 @@ def main():
         return
     
     equation = sys.argv[1]
-
-    terms = {
-        2: 5,
-        1: 5,
-        0: 1,
-    }
-
-    degree_and_solution(terms)
+    try:
+        terms = parse_equation(equation)
+        print_reduced_form(terms)
+        # degree_and_solution(terms)
+    except ValueError as e:
+        print(f"Error: {e}")
 
 
 if __name__ == "__main__":
