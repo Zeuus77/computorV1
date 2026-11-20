@@ -133,7 +133,7 @@ def main():
     try:
         terms = parse_equation(equation)
         print_reduced_form(terms)
-        # degree_and_solution(terms)
+        degree_and_solution(terms)
     except ValueError as e:
         print(f"Error: {e}")
 
